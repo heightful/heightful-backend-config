@@ -1,12 +1,9 @@
-name: Trigger Package and Push
+name: Trigger Package and Push from Main
 
 on:
   push:
     branches:
-      - feature/*
-      - bugfix/*
-      - hotfix/*
-      - release/*
+      - main
 
 jobs:
   trigger:
@@ -15,10 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Extract Short Commit SHA
-        id: extract_sha
-        run: echo "SHORT_SHA=$(echo $GITHUB_SHA | cut -c1-7)" >> $GITHUB_ENV
 
       - name: Notify Deployment Repo
         uses: actions/github-script@v7
@@ -34,6 +27,6 @@ jobs:
                 service_name: '${{ github.event.repository.name }}',
                 commit_sha: '${{ github.sha }}',
                 org_name: '${{ github.repository_owner }}',
-                image_tag: '${{ env.SHORT_SHA }}'
+                image_tag: 'latest'
               }
             })
